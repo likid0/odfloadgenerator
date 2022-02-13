@@ -1,0 +1,12 @@
+{{- range $key, $val := $.Values.apps.s3.appsname }}
+{{- if $.Values.apps.rbd.enabled }}
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: {{ $val }}
+spec:
+  generateBucketName: {{ $val }}
+  storageClassName: '{{ $.Values.apps.s3.sc }}'
+{{- end }}
+{{- end }}

@@ -1,0 +1,61 @@
+{{- range $key, $val := $.Values.apps.rbd.appsname }}
+{{- if $.Values.apps.rbd.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $val }}
+  labels:
+    app: {{ $val }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $val }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ $val }}
+        workload: rbd
+        generator: 'yes'
+    spec:
+      containers:
+{{- if $.Values.s2i.enabled }}
+      - image: '{{ $.Values.s2i.isname }}:latest'
+{{ else }}
+      - image: '{{ $.Values.s2i.image }}'
+{{- end }}
+        imagePullPolicy: Always
+        name: rbdwriteworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: '{{ $.Values.apps.rbd.mountpoint }}'
+        - name: CEPH_TEST_COMP
+          value: rbd
+        - name: CEPH_TEST_TYPE
+{{- if or (eq $val "rbd-write-workload-generator-cache") (eq $val "rbd-write-workload-generator-no-cache") }}
+          value: write
+{{- end }}
+{{- if or (eq $val "rbd-read-workload-generator-cache") (eq $val "rbd-read-workload-generator-no-cache") }}
+          value: read
+{{- end }}
+        - name: CEPH_TEST_W_CACHE
+{{- if or (eq $val "rbd-write-workload-generator-cache") (eq $val "rbd-read-workload-generator-cache") }}
+          value: 'yes'
+{{- end }}
+{{- if or (eq $val "rbd-write-workload-generator-no-cache") (eq $val "rbd-read-workload-generator-no-cache") }}
+          value: 'no'
+{{- end }}
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: {{ $val }}-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: {{ $val }}-persistent-storage
+        persistentVolumeClaim:
+          claimName: {{ $val }}-pv-claim
+{{- end }}
+{{- end }}
+

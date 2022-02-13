@@ -1,0 +1,38 @@
+{{- range $key, $val := $.Values.apps.rbd.appsname }}
+{{- if $.Values.apps.rbd.enabled }}
+---     
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $val }}-pv-claim
+  labels:
+    app: {{ $val }}
+spec:
+  storageClassName: '{{ $.Values.apps.rbd.sc }}'
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: '{{ $.Values.apps.rbd.size }}'
+{{- end }}
+{{- end }}
+
+{{- range $key, $val := $.Values.apps.cephfs.appsname }}
+{{- if $.Values.apps.cephfs.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $val }}-pv-claim
+  labels:
+    app: {{ $val }}
+spec:
+  storageClassName: '{{ $.Values.apps.cephfs.sc }}'
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: '{{ $.Values.apps.cephfs.size }}'
+{{- end }}
+{{- end }}
+

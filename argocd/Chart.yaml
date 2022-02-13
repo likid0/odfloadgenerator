@@ -1,0 +1,11 @@
+apiVersion: v2
+name: argocd-odf-workload-generator
+description: A Helm chart to deploy argo app for ODF workload generator
+type: application
+
+version: 0.1.0
+appVersion: 0.1.16
+
+mantainers:
+  - name: Daniel Parkes
+    email: dparkes@redhat.com

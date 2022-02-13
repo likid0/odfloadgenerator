@@ -1,0 +1,9 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: '{{ $.Values.s2i.isname }}'
+  labels:
+    app: '{{ $.Values.s2i.isname }}'
+spec:
+  lookupPolicy:
+    local: true

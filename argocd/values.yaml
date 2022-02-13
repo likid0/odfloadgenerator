@@ -1,0 +1,11 @@
+# Configure the loadgenerator tool as an Argocd app.
+# Git Repo were we have our Helm chart.
+helmRepoUrl: https://github.com/likid0/odfloadgenerator
+argocd:
+  loadgenerator:
+    enabled: true
+    branch: main
+    path: helm/
+    autosync: true
+    namespace: loadgen
+    project: default

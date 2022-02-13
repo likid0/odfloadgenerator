@@ -1,0 +1,45 @@
+# LoadGenerator Tool configuration Options
+apps:
+  #Namespace were to deploy the loadgenerator app.
+  namespace: loadgen
+  ###
+  # options related to RBD load generation testing
+  ###
+  rbd:
+    #If set to true RBD testing will take place
+    enabled: True
+    #Size of the RBD PVs that will be created
+    size: 50Gi
+    #The Storage Class that will be used to provide the PVs
+    sc: ocs-storagecluster-ceph-rbd
+    #Mount point inside the pods
+    mountpoint: /mnt/pv 
+    appsname:
+      writecache: rbd-write-workload-generator-cache
+      write: rbd-write-workload-generator-no-cache
+      read: rbd-read-workload-generator-cache
+      readcache: rbd-read-workload-generator-no-cache
+  # options related to cephfs load generation testing
+  cephfs:
+    enabled: True
+    size: 30Gi
+    sc: ocs-storagecluster-cephfs
+    mountpoint: /mnt/pv
+    appsname:
+      writecache: cephfs-write-workload-generator-cache
+      write: cephfs-write-workload-generator-no-cache
+      read: cephfs-read-workload-generator-cache
+      readcache: cephfs-read-workload-generator-no-cache
+  # Options related to S3 load generation testing
+  s3:
+    enabled: True
+    sc: openshift-storage.noobaa.io
+    appsname:
+      write: rgw-workload-generator-write
+      read: rgw-workload-generator-read
+
+s2i:
+  enabled: True
+  git: https://github.com/likid0/odfloadgenerator
+  image: quay.io/ddomingu/ocsloadgenerator
+  isname: ocsloadgenerator

@@ -1,0 +1,29 @@
+{{- if $.Values.s2i.enabled }}
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: '{{ $.Values.s2i.isname }}'
+  labels:
+    app: '{{ $.Values.s2i.isname }}'
+spec:
+  successfulBuildsHistoryLimit: 2
+  failedBuildsHistoryLimit: 2
+  source:
+    type: Git
+    git:
+      uri: '{{ $.Values.s2i.git }}' 
+    contextDir: app
+  triggers:
+    - type: ConfigChange
+    - type: GitHub
+      github: 
+        secret: githubsecret
+  strategy:
+    type: Docker                      
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {{ $.Values.s2i.isname }}:latest
+{{- end }}

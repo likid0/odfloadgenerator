@@ -25,6 +25,6 @@ spec:
   - group: DeploymentConfig.openshift.io
     kind: DeploymentConfig
     jsonPointers:
-      - /spec/template/spec/containers/image
+      - /spec/template/spec/containers[0]/image
 {{- end }}
 {{- end }}

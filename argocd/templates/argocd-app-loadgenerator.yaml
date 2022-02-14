@@ -22,7 +22,7 @@ spec:
       selfHeal: false  
 {{- end }}
   ignoreDifferences:
-  - group: DeploymentConfig.openshift.io
+  - group: apps.openshift.io/v1
     kind: DeploymentConfig
     jsonPointers:
       - /spec/template/spec/containers[0]/image

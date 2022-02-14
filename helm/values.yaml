@@ -1,7 +1,7 @@
 # LoadGenerator Tool configuration Options
 apps:
   #Namespace were to deploy the loadgenerator app.
-  namespace: loadgen
+  namespace: loadgenerator
   ###
   # options related to RBD load generation testing
   ###
@@ -41,5 +41,6 @@ apps:
 s2i:
   enabled: True
   git: https://github.com/likid0/odfloadgenerator
-  image: quay.io/ddomingu/ocsloadgenerator
   isname: ocsloadgenerator
+  # If s2i is set to disabled this contaimer image will be used
+  image: quay.io/ddomingu/ocsloadgenerator

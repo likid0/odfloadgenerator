@@ -49,6 +49,9 @@ spec:
       - image: '{{ $.Values.s2i.image }}'
 {{- end }}
         imagePullPolicy: Always
+        resources: {}	
+        terminationMessagePath: /dev/termination-log	
+        terminationMessagePolicy: File
         name: s3workloadgenerator
         env:
         - name: CEPH_TEST_COMP

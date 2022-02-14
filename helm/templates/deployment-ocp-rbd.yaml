@@ -50,6 +50,9 @@ spec:
 {{- end }}
         imagePullPolicy: Always
         name: rbdwriteworkloadgenerator
+        resources: {}	
+        terminationMessagePath: /dev/termination-log	
+        terminationMessagePolicy: File
         env:
         - name: CEPH_PV_MOUNT_DIR
           value: '{{ $.Values.apps.rbd.mountpoint }}'

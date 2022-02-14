@@ -1,24 +1,46 @@
 {{- range $key, $val := $.Values.apps.s3.appsname }}
 {{- if $.Values.apps.s3.enabled }}
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
 metadata:
   name: {{ $val }}
   labels:
     app: {{ $val }}
 spec:
-  selector:
-    matchLabels:
-      app: {{ $val }}
   strategy:
-    type: Recreate
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ConfigChange
+{{- if $.Values.s2i.enabled }}
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - s3workloadgenerator
+        from:
+          kind: ImageStreamTag
+          name: '{{ $.Values.s2i.isname }}:latest'
+{{- end }}
+  replicas: 1
+  revisionHistoryLimit: 5
+  test: false
+  selector:
+    app: {{ $val }}
+    deploymentconfig: {{ $val }}
   template:
     metadata:
       labels:
         app: {{ $val }}
-        workload: object
-        generator: 'yes'
+        deploymentconfig: {{ $val }}
     spec:
       containers:
 {{- if $.Values.s2i.enabled }}
@@ -27,7 +49,7 @@ spec:
       - image: '{{ $.Values.s2i.image }}'
 {{- end }}
         imagePullPolicy: Always
-        name: objectwriteworkloadgenerator
+        name: s3workloadgenerator
         env:
         - name: CEPH_TEST_COMP
           value: object

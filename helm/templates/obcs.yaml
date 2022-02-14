@@ -1,5 +1,5 @@
 {{- range $key, $val := $.Values.apps.s3.appsname }}
-{{- if $.Values.apps.rbd.enabled }}
+{{- if $.Values.apps.s3.enabled }}
 ---
 apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim

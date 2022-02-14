@@ -25,7 +25,7 @@ spec:
       imageChangeParams:
         automatic: true
         containerNames:
-          - '{{ $.Values.s2i.isname }}'
+          - rbdwriteworkloadgenerator
         from:
           kind: ImageStreamTag
           name: '{{ $.Values.s2i.isname }}:latest'

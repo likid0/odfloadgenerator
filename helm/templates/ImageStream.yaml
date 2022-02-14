@@ -6,4 +6,4 @@ metadata:
     app: '{{ $.Values.s2i.isname }}'
 spec:
   lookupPolicy:
-    local: false
+    local: true

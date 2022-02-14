@@ -6,8 +6,8 @@ metadata:
   labels:
     app: '{{ $.Values.s2i.isname }}'
 spec:
-  successfulBuildsHistoryLimit: 2
-  failedBuildsHistoryLimit: 2
+  successfulBuildsHistoryLimit: 1
+  failedBuildsHistoryLimit: 1
   source:
     type: Git
     git:

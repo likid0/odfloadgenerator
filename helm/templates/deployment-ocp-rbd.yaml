@@ -80,7 +80,7 @@ spec:
       volumes:
       - name: {{ $val }}-persistent-storage
         persistentVolumeClaim:
-          claimName: {{ $val }}-pv-claim
+          claimName: {{ $val }}-{{ $.Release.Namespace | trunc 5 }}-pv-claim
 {{- end }}
 {{- end }}
 

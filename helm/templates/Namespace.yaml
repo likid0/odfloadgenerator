@@ -3,5 +3,5 @@ kind: Namespace
 metadata:
   labels:
     openshift.io/cluster-monitoring: "true"
-  name: '{{ $.Values.apps.namespace }}'
+  name: {{ .Release.Namespace }}
 spec: {}

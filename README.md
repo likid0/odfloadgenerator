@@ -1,46 +1,15 @@
-# Workload generator for HA tests in OCS (converged and external Ceph cluster)
+# Workload generator for HA tests in OCS/ODF (Internal and external Deployments)
 
-This project will store the python scripts to generate workloads (block, file and object) when performing HA tests in OCS (converged and external Ceph cluster).
+## What is the ODF loadgenerator tool?
 
-There is a Dockerfile included to create a new container image containing the Python script to run the different IO workloads. There are 3 types of test available, We set the type of tests we want to run via environment files.
+The ODF loadgenerator tool is a python script to generate load for different kind of workloads:
+- block(rbd)
+- file(cephfs)
+- object(S3)
 
-* Block (RBD):
-  - Write: export envs like `CEPH_TEST_COMP=rbd` and `CEPH_TEST_TYPE=write`
-  - Read: export envs like `CEPH_TEST_COMP=rbd` and `CEPH_TEST_TYPE=read`
-* File (CephFS):
-  - Write: export envs like `CEPH_TEST_COMP=fs` and `CEPH_TEST_TYPE=write`
-  - Read: export envs like `CEPH_TEST_COMP=fs` and `CEPH_TEST_TYPE=read`
-* Object (Noobaa or Ceph RadosGW):
-  - Write (PUT): export envs like `CEPH_TEST_COMP=object` and `CEPH_TEST_TYPE=write`
-  - Read (GET): export envs like `CEPH_TEST_COMP=object` and `CEPH_TEST_TYPE=read`
-  - Mandatory envs when using object workloads, when using OCS we are using a OBC so there is no need to fill in the envs:
-    - `S3_HOST=host.example.com`
-    - `S3_ACCESS_KEY=6JAXXXXXXXXXXXXXX78I`
-    - `S3_SECRET_KEY=OBzXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMnB`
-    - `S3_BUCKET_NAME=test-bucket`
+when performing High Availability and resiliencie tests Ceph/ODF we need to generate load/IOs from the clients to see how it will be affected by the failure of different services/components in the Ceph/ODF stack.
 
-There are other env vars available that we can set:
-
-- All workloads:
-  - `CEPH_TEST_SLEEP`: This var sets the amount of time to sleep between loop iterations.
-  - `LOG_SECONDS`: This var sets the number of seconds where we consider an I/O operation is delayed.
-- RBD and CephFS workloads:
-  - `CEPH_PV_MOUNT_DIR`: This var sets where we are going to write the data and metadata during the test, the files get generated automatically depending on the kind of test.
-  - `CEPH_TEST_R_CACHE`: If we set this var to False. We use the `POSIX_FADV_DONTNEED` flag during the read tests. [POSIX_FADV_DONTNEED INFO](https://insights.oetiker.ch/linux/fadvise.html)
-  - `CEPH_TEST_W_CACHE`: If we set this var to False. We run a flush after each write.
-  - `CEPH_TEST_TMP_DIR`: We can use this var to tell the script where to write the script logs, by default they are written into /tmp/ to avoid compiting for I/O.
-- Object workloads:
-  - `S3_PORT`: This var sets where the S3 server is listening for requests.
-  - `S3_SECURE`: This var sets if HTTP/S should be used.
-  - `S3_VERIFY_SSL`: This var sets if the validity of the TLS certificate should be verified.
-  - `S3_AVG_ATTEMPTS`: This var sets the number of operations to calculate the request average time.
-
-
-**NOTE:** The example is using the `nodeSelector: compute=true`. Before creating the deployments label the worker nodes appropiately or remove the `nodeSelector` section from the yaml file.
-
-```
-$ for node in $(oc get nodes -l node-role.kubernetes.io/worker --no-headers=true -o name);do oc label $node compute="true";done
-```
+## What workload can we create with the ODF loadgenerator tool?
 
 ## Block (RBD)
 
@@ -92,3 +61,95 @@ $ for node in $(oc get nodes -l node-role.kubernetes.io/worker --no-headers=true
   - Inside an infinite loop:
     - Download from the S3 server the file we created in the initial step.
     - If the GET operation elapsed time is greater than `LOG_SECONDS` second/s, we log the operation.
+
+
+## Deploying the ODF loadgenerator tool.
+
+### Deploying with Openshift
+
+#### Deploying using Helm.
+
+To deploy with helm we first need to git clone this repo. 
+
+```
+git clone https:https://gitlab.consulting.redhat.com/iberia-consulting/inditex/ocs/ocs-ha-tests
+```
+
+We also need to have the helm binary available:
+```
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+We need to be logged in to our OCP and in the namespace where we want to deploy our loadgenerator pods
+
+```
+oc login https://api.ocp4.example.com:6443  -u user --insecure-skip-tls-verify 
+oc new-project loadgen
+```
+
+Modify the helm/values.yaml file to fit our needs, depending on the tests we need to run.
+
+```
+vi ocs-ha-tests/helm/values.yaml
+```
+
+Finally, deploy the ODF loadgenerator tool installing the chat with helm:
+
+```
+cd ocs-ha-tests/
+helm install odf-loadgenerator helm
+```
+
+or using the template|apply approach.
+
+```
+cd ocs-ha-tests/
+helm template helm | oc create -f -
+```
+
+#### Deploy using an Argocd application.
+
+If you have Argocd running on you OCP cluster, you can use the example argocd application available in the repo under the argocd/ dir.
+
+Modify the argocd/values.yaml file as needed and deploy the argocd application
+```
+vi argocd/values.yaml
+helm template argocd | oc create -f -
+```
+
+#### Deploy using a Deployment yaml file.
+
+There is a Dockerfile included to create a new container image containing the Python script to run the different IO workloads. There are 3 types of test available, We set the type of tests we want to run via environment files.
+
+* Block (RBD):
+  - Write: export envs like `CEPH_TEST_COMP=rbd` and `CEPH_TEST_TYPE=write`
+  - Read: export envs like `CEPH_TEST_COMP=rbd` and `CEPH_TEST_TYPE=read`
+* File (CephFS):
+  - Write: export envs like `CEPH_TEST_COMP=fs` and `CEPH_TEST_TYPE=write`
+  - Read: export envs like `CEPH_TEST_COMP=fs` and `CEPH_TEST_TYPE=read`
+* Object (Noobaa or Ceph RadosGW):
+  - Write (PUT): export envs like `CEPH_TEST_COMP=object` and `CEPH_TEST_TYPE=write`
+  - Read (GET): export envs like `CEPH_TEST_COMP=object` and `CEPH_TEST_TYPE=read`
+  - Mandatory envs when using object workloads, when using OCS we are using a OBC so there is no need to fill in the envs:
+    - `S3_HOST=host.example.com`
+    - `S3_ACCESS_KEY=6JAXXXXXXXXXXXXXX78I`
+    - `S3_SECRET_KEY=OBzXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXMnB`
+    - `S3_BUCKET_NAME=test-bucket`
+
+There are other env vars available that we can set:
+
+- All workloads:
+  - `CEPH_TEST_SLEEP`: This var sets the amount of time to sleep between loop iterations.
+  - `LOG_SECONDS`: This var sets the number of seconds where we consider an I/O operation is delayed.
+- RBD and CephFS workloads:
+  - `CEPH_PV_MOUNT_DIR`: This var sets where we are going to write the data and metadata during the test, the files get generated automatically depending on the kind of test.
+  - `CEPH_TEST_R_CACHE`: If we set this var to False. We use the `POSIX_FADV_DONTNEED` flag during the read tests. [POSIX_FADV_DONTNEED INFO](https://insights.oetiker.ch/linux/fadvise.html)
+  - `CEPH_TEST_W_CACHE`: If we set this var to False. We run a flush after each write.
+  - `CEPH_TEST_TMP_DIR`: We can use this var to tell the script where to write the script logs, by default they are written into /tmp/ to avoid compiting for I/O.
+- Object workloads:
+  - `S3_PORT`: This var sets where the S3 server is listening for requests.
+  - `S3_SECURE`: This var sets if HTTP/S should be used.
+  - `S3_VERIFY_SSL`: This var sets if the validity of the TLS certificate should be verified.
+  - `S3_AVG_ATTEMPTS`: This var sets the number of operations to calculate the request average time.
+
+### Deploying with Podman.

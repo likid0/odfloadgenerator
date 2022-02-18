@@ -18,18 +18,22 @@ apps:
       write: rbd-write-workload-generator-no-cache
       read: rbd-read-workload-generator-cache
       readcache: rbd-read-workload-generator-no-cache
+  ###
   # options related to cephfs load generation testing
+  ###
   cephfs:
     enabled: True
     size: 10Gi
     sc: ocs-storagecluster-cephfs
     mountpoint: /mnt/pv
     appsname:
-#      writecache: cephfs-write-workload-generator-cache
+      writecache: cephfs-write-workload-generator-cache
       write: cephfs-write-workload-generator-no-cache
-#      read: cephfs-read-workload-generator-cache
-#      readcache: cephfs-read-workload-generator-no-cache
+      read: cephfs-read-workload-generator-cache
+      readcache: cephfs-read-workload-generator-no-cache
+  ###      
   # Options related to S3 load generation testing
+  ###
   s3:
     enabled: False
     sc: ocs-ceph-rgw
@@ -38,8 +42,11 @@ apps:
       read: rgw-workload-generator-read
 
 s2i:
+  # If set to true a buildconfig and imagestream will be used to generate the
+  # container image
   enabled: False
   git: https://github.com/likid0/odfloadgenerator
   isname: ocsloadgenerator
-  # If s2i is set to disabled this contaimer image will be used
+  # If s2i is set to False we will fetch the Container image from the following
+  # container registry
   image: quay.io/ddomingu/ocsloadgenerator

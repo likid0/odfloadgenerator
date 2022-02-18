@@ -1,0 +1,619 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rbd-write-workload-generator-pv-claim-cache
+  labels:
+    app: rbd-write-workload-generator-cache
+spec:
+  storageClassName: ocs-storagecluster-ceph-rbd
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbd-write-workload-generator-cache
+  labels:
+    app: rbd-write-workload-generator-cache
+spec:
+  selector:
+    matchLabels:
+      app: rbd-write-workload-generator-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rbd-write-workload-generator-cache
+        workload: rbd
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: rbdwriteworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: rbd
+        - name: CEPH_TEST_TYPE
+          value: write
+        - name: CEPH_TEST_W_CACHE
+          value: 'yes'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: rbd-write-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: rbd-write-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: rbd-write-workload-generator-pv-claim-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rbd-write-workload-generator-pv-claim-no-cache
+  labels:
+    app: rbd-write-workload-generator-no-cache
+spec:
+  storageClassName: ocs-storagecluster-ceph-rbd
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbd-write-workload-generator-no-cache
+  labels:
+    app: rbd-write-workload-generator-no-cache
+spec:
+  selector:
+    matchLabels:
+      app: rbd-write-workload-generator-no-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rbd-write-workload-generator-no-cache
+        workload: rbd
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: rbdwriteworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: rbd
+        - name: CEPH_TEST_TYPE
+          value: write
+        - name: CEPH_TEST_W_CACHE
+          value: 'no'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: rbd-write-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: rbd-write-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: rbd-write-workload-generator-pv-claim-no-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rbd-read-workload-generator-pv-claim-cache
+  labels:
+    app: rbd-read-workload-generator-cache
+spec:
+  storageClassName: ocs-storagecluster-ceph-rbd
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbd-read-workload-generator-cache
+  labels:
+    app: rbd-read-workload-generator-cache
+    workload: rbd
+    generator: 'yes'
+spec:
+  selector:
+    matchLabels:
+      app: rbd-read-workload-generator-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rbd-read-workload-generator-cache
+        workload: rbd
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: rbdreadworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: rbd
+        - name: CEPH_TEST_TYPE
+          value: read
+        - name: CEPH_TEST_R_CACHE
+          value: 'yes'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: rbd-read-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: rbd-read-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: rbd-read-workload-generator-pv-claim-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rbd-read-workload-generator-pv-claim-no-cache
+  labels:
+    app: rbd-read-workload-generator-no-cache
+spec:
+  storageClassName: ocs-storagecluster-ceph-rbd
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rbd-read-workload-generator-no-cache
+  labels:
+    app: rbd-read-workload-generator-no-cache
+    workload: rbd
+    generator: 'yes'
+spec:
+  selector:
+    matchLabels:
+      app: rbd-read-workload-generator-no-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rbd-read-workload-generator-no-cache
+        workload: rbd
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: rbdreadworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: rbd
+        - name: CEPH_TEST_TYPE
+          value: read
+        - name: CEPH_TEST_R_CACHE
+          value: 'no'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: rbd-read-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: rbd-read-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: rbd-read-workload-generator-pv-claim-no-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cephfs-write-workload-generator-pv-claim-cache
+  labels:
+    app: cephfs-write-workload-generator-cache
+spec:
+  storageClassName: ocs-storagecluster-cephfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cephfs-write-workload-generator-cache
+  labels:
+    app: cephfs-write-workload-generator-cache
+    workload: fs
+    generator: 'yes'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cephfs-write-workload-generator-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cephfs-write-workload-generator-cache
+        workload: fs
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: cephfswriteworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: fs
+        - name: CEPH_TEST_TYPE
+          value: write
+        - name: CEPH_TEST_W_CACHE
+          value: 'yes'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: cephfs-write-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: cephfs-write-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: cephfs-write-workload-generator-pv-claim-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cephfs-write-workload-generator-pv-claim-no-cache
+  labels:
+    app: cephfs-write-workload-generator-no-cache
+spec:
+  storageClassName: ocs-storagecluster-cephfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cephfs-write-workload-generator-no-cache
+  labels:
+    app: cephfs-write-workload-generator-no-cache
+    workload: fs
+    generator: 'yes'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cephfs-write-workload-generator-no-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cephfs-write-workload-generator-no-cache
+        workload: fs
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: cephfswriteworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: fs
+        - name: CEPH_TEST_TYPE
+          value: write
+        - name: CEPH_TEST_W_CACHE
+          value: 'no'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: cephfs-write-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: cephfs-write-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: cephfs-write-workload-generator-pv-claim-no-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cephfs-read-workload-generator-pv-claim-cache
+  labels:
+    app: cephfs-read-workload-generator-cache
+spec:
+  storageClassName: ocs-storagecluster-cephfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cephfs-read-workload-generator-cache
+  labels:
+    app: cephfs-read-workload-generator-cache
+    workload: fs
+    generator: 'yes'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cephfs-read-workload-generator-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cephfs-read-workload-generator-cache
+        workload: fs
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: cephfsreadworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: fs
+        - name: CEPH_TEST_TYPE
+          value: read 
+        - name: CEPH_TEST_R_CACHE
+          value: 'yes'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: cephfs-read-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: cephfs-read-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: cephfs-read-workload-generator-pv-claim-cache
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cephfs-read-workload-generator-pv-claim-no-cache
+  labels:
+    app: cephfs-read-workload-generator-no-cache
+spec:
+  storageClassName: ocs-storagecluster-cephfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cephfs-read-workload-generator-no-cache
+  labels:
+    app: cephfs-read-workload-generator-no-cache
+    workload: fs
+    generator: 'yes'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cephfs-read-workload-generator-no-cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cephfs-read-workload-generator-no-cache
+        workload: fs
+        generator: 'yes'
+    spec:
+      nodeSelector:
+        compute: "true"
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: cephfsreadworkloadgenerator
+        env:
+        - name: CEPH_PV_MOUNT_DIR
+          value: /mnt/pv
+        - name: CEPH_TEST_COMP
+          value: fs
+        - name: CEPH_TEST_TYPE
+          value: read 
+        - name: CEPH_TEST_R_CACHE
+          value: 'no'
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        volumeMounts:
+        - name: cephfs-read-workload-generator-persistent-storage
+          mountPath: /mnt/pv
+      volumes:
+      - name: cephfs-read-workload-generator-persistent-storage
+        persistentVolumeClaim:
+          claimName: cephfs-read-workload-generator-pv-claim-no-cache
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: rgw-workload-generator
+spec:
+  generateBucketName: rgw-workload-generator
+  storageClassName: ocs-external-storagecluster-ceph-rgw
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-write-workload-generator
+  labels:
+    app: object-write-workload-generator
+spec:
+  selector:
+    matchLabels:
+      app: object-write-workload-generator
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: object-write-workload-generator
+        workload: object
+        generator: 'yes'
+    spec:
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: objectwriteworkloadgenerator
+        env:
+        - name: CEPH_TEST_COMP
+          value: object
+        - name: CEPH_TEST_TYPE
+          value: write
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        - name: S3_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: rgw-workload-generator
+              key: BUCKET_HOST
+        - name: S3_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rgw-workload-generator
+              key: AWS_ACCESS_KEY_ID
+        - name: S3_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rgw-workload-generator
+              key: AWS_SECRET_ACCESS_KEY
+        - name: S3_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: rgw-workload-generator
+              key: BUCKET_NAME
+        - name: S3_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: rgw-workload-generator
+              key: BUCKET_PORT
+        - name: S3_SECURE
+          value: 'no'
+        - name: S3_VERIFY_SSL
+          value: 'no'
+        - name: S3_AVG_ATTEMPTS
+          value: '10'
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: rgw-workload-generator-read
+spec:
+  generateBucketName: rgw-workload-generator-read
+  storageClassName: ocs-external-storagecluster-ceph-rgw
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: object-read-workload-generator
+  labels:
+    app: object-read-workload-generator
+spec:
+  selector:
+    matchLabels:
+      app: object-read-workload-generator
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: object-read-workload-generator
+        workload: object
+        generator: 'yes'
+    spec:
+      containers:
+      - image: quay.io/ddomingu/ocsloadgenerator
+        imagePullPolicy: Always
+        name: objectreadworkloadgenerator
+        env:
+        - name: CEPH_TEST_COMP
+          value: object
+        - name: CEPH_TEST_TYPE
+          value: read
+        - name: CEPH_TEST_SLEEP
+          value: '0.1'
+        - name: S3_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: rgw-workload-generator-read
+              key: BUCKET_HOST
+        - name: S3_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rgw-workload-generator-read
+              key: AWS_ACCESS_KEY_ID
+        - name: S3_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: rgw-workload-generator-read
+              key: AWS_SECRET_ACCESS_KEY
+        - name: S3_BUCKET_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: rgw-workload-generator-read
+              key: BUCKET_NAME
+        - name: S3_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: rgw-workload-generator-read
+              key: BUCKET_PORT
+        - name: S3_SECURE
+          value: 'no'
+        - name: S3_VERIFY_SSL
+          value: 'no'
+        - name: S3_AVG_ATTEMPTS
+          value: '10'

@@ -3,9 +3,15 @@
 helmRepoUrl: https://github.com/likid0/odfloadgenerator
 argocd:
   loadgenerator:
+# Set to true to enable de deployment of the app
     enabled: true
+# git Branch
     branch: main
+# Git directory where the helm chart is
     path: helm/
+# set to true to enable autosync of the app
     autosync: true
+# OCP namespace where to deploy the loadgenerator tool
     namespace: loadgen
+# The Argocd project to use
     project: default

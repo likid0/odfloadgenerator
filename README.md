@@ -18,12 +18,12 @@
 
 The ODF load generator tool is a python script that helps us generate load for different kinds of protocols and access patterns:
 
-- block(rbd)
-- file(cephfs)
-- object(S3)
+- Block(rbd)
+- Shared File(cephfs)
+- Object(S3)
 
 When performing High Availability and resilience tests Ceph/ODF we need to generate load/IOs from the clients to see how it will be affected by the failure of different services/components in the Ceph/Rook/ODF stack.
-￼
+
 ## What workload can we create with the ODF loadgenerator tool?
 
 ## Block (RBD)

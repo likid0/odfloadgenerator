@@ -1,14 +1,16 @@
 # Workload generator for HA tests in OCS/ODF (Internal and external Deployments)
 
-- [Heading](#heading)
-  * [Sub-heading](#sub-heading)
-    + [Sub-sub-heading](#sub-sub-heading)
-- [Heading](#heading-1)
-  * [Sub-heading](#sub-heading-1)
-    + [Sub-sub-heading](#sub-sub-heading-1)
-- [Heading](#heading-2)
-  * [Sub-heading](#sub-heading-2)
-    + [Sub-sub-heading](#sub-sub-heading-2)
+- [Heading](#what-is-the-odf-loadgenerator-tool)
+- [Heading](#what-workload-can-we-create-with-the-odf-loadgenerator-tool)
+  * [Sub-heading](#block-rbd)
+  * [Sub-heading](#file-cephfs)
+  * [Sub-heading](#object-noobaa-or-ceph-radosgw)
+- [Heading](#deploying-the-odf-loadgenerator-tool)
+  * [Sub-heading](#deploying-with-openshift)
+    + [Sub-sub-heading](#deploying-using-helm)
+    + [Sub-sub-heading](#deploy-using-an-argocd-application)
+    + [Sub-sub-heading](#deploy-using-a-deployment-yaml-file)
+  * [Sub-heading](#deploying-with-podman)
 
 
 ## What is the ODF loadgenerator tool?

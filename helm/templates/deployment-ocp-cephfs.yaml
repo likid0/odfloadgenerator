@@ -42,6 +42,19 @@ spec:
         app: {{ $val }}
         deploymentconfig: {{ $val }}
     spec:
+      topologySpreadConstraints:
+      - labelSelector:
+           matchLabels: 
+               deploymentconfig: {{ $val }}
+        maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+      - labelSelector:
+           matchLabels: 
+               deploymentconfig: {{ $val }}
+        maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
       containers:
 {{- if $.Values.s2i.enabled }}
       - image: '{{ $.Values.s2i.isname }}'

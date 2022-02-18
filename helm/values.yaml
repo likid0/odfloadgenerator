@@ -5,7 +5,7 @@ apps:
   ###
   rbd:
     #If set to true RBD testing will take place
-    enabled: True
+    enabled: False
     #Size of the RBD PVs that will be created
     size: 10Gi
     #The Storage Class that will be used to provide the block RWO PVs
@@ -14,21 +14,21 @@ apps:
     mountpoint: /mnt/pv 
     #appsnames can be ignored.
     appsname:
-#      writecache: rbd-write-workload-generator-cache
+      writecache: rbd-write-workload-generator-cache
       write: rbd-write-workload-generator-no-cache
-#      read: rbd-read-workload-generator-cache
-#      readcache: rbd-read-workload-generator-no-cache
+      read: rbd-read-workload-generator-cache
+      readcache: rbd-read-workload-generator-no-cache
   # options related to cephfs load generation testing
   cephfs:
-    enabled: False
-    size: 30Gi
+    enabled: True
+    size: 10Gi
     sc: ocs-storagecluster-cephfs
     mountpoint: /mnt/pv
     appsname:
-      writecache: cephfs-write-workload-generator-cache
+#      writecache: cephfs-write-workload-generator-cache
       write: cephfs-write-workload-generator-no-cache
-      read: cephfs-read-workload-generator-cache
-      readcache: cephfs-read-workload-generator-no-cache
+#      read: cephfs-read-workload-generator-cache
+#      readcache: cephfs-read-workload-generator-no-cache
   # Options related to S3 load generation testing
   s3:
     enabled: False

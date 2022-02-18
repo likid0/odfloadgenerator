@@ -83,7 +83,7 @@ When performing High Availability and resilience tests Ceph/ODF we need to gener
 ### Deploying on Openshift/k8's using Helm.
 To deploy with helm we first need to git clone this repo. 
 ```
-git clone https:https://gitlab.consulting.redhat.com/iberia-consulting/inditex/ocs/ocs-ha-tests
+git clone https://github.com/likid0/odfloadgenerator.git
 ```
 We also need to have the helm binary available.
 ```

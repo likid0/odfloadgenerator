@@ -4,9 +4,9 @@
 apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
-  name: {{ $val }}
+  name: {{ $val }}-{{ $.Release.Namespace | trunc 5 }}
 spec:
-  generateBucketName: {{ $val }}
+  generateBucketName: {{ $val | substr 13 27 }}
   storageClassName: '{{ $.Values.apps.s3.sc }}'
 {{- end }}
 {{- end }}

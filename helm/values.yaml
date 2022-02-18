@@ -22,7 +22,7 @@ apps:
   # options related to cephfs load generation testing
   ###
   cephfs:
-    enabled: True
+    enabled: False
     size: 10Gi
     sc: ocs-storagecluster-cephfs
     mountpoint: /mnt/pv
@@ -35,8 +35,9 @@ apps:
   # Options related to S3 load generation testing
   ###
   s3:
-    enabled: False
-    sc: ocs-ceph-rgw
+    enabled: true
+    sc: ocs-storagecluster-ceph-rgw
+    s3secure: true
     appsname:
       write: rgw-workload-generator-write
       read: rgw-workload-generator-read

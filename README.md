@@ -1,16 +1,17 @@
 # Workload generator for HA tests in OCS/ODF (Internal and external Deployments)
 
-- [Heading](#what-is-the-odf-loadgenerator-tool)
-- [Heading](#what-workload-can-we-create-with-the-odf-loadgenerator-tool)
-  * [Sub-heading](#block-rbd)
-  * [Sub-heading](#file-cephfs)
-  * [Sub-heading](#object-noobaa-or-ceph-radosgw)
-- [Heading](#deploying-the-odf-loadgenerator-tool)
-  * [Sub-heading](#deploying-with-openshift)
-    + [Sub-sub-heading](#deploying-using-helm)
-    + [Sub-sub-heading](#deploy-using-an-argocd-application)
-    + [Sub-sub-heading](#deploy-using-a-deployment-yaml-file)
-  * [Sub-heading](#deploying-with-podman)
+- [What is the ODF loadgenerator tool?](#what-is-the-odf-loadgenerator-tool)
+- [What workload can we create with the ODF loadgenerator tool?](#what-workload-can-we-create-with-the-odf-loadgenerator-tool)
+  * [Block (RBD)](#block-rbd)
+  * [File (CephFS)](#file-cephfs)
+  * [Object (Noobaa or Ceph RadosGW)](#object-noobaa-or-ceph-radosgw)
+- [Deploying the ODF loadgenerator tool](#deploying-the-odf-loadgenerator-tool)
+  * [Deploying with Openshift](#deploying-with-openshift)
+    + [Deploying using Helm](#deploying-using-helm)
+    + [Deploy using an Argocd application](#deploy-using-an-argocd-application)
+    + [Deploy using a Deployment yaml file.](#deploy-using-a-deployment-yaml-file)
+  * [Deploying with Podman.](#deploying-with-podman)
+
 
 
 ## What is the ODF loadgenerator tool?
@@ -80,7 +81,7 @@ when performing High Availability and resiliencie tests Ceph/ODF we need to gene
 
 ### Deploying with Openshift
 
-#### Deploying using Helm.
+### Deploying using Helm.
 
 To deploy with helm we first need to git clone this repo. 
 
@@ -120,7 +121,7 @@ cd ocs-ha-tests/
 helm template helm | oc create -f -
 ```
 
-#### Deploy using an Argocd application.
+### Deploy using an Argocd application.
 
 If you have Argocd running on you OCP cluster, you can use the example argocd application available in the repo under the argocd/ dir.
 
@@ -130,7 +131,7 @@ vi argocd/values.yaml
 helm template argocd | oc create -f -
 ```
 
-#### Deploy using a Deployment yaml file.
+### Deploy using a Deployment yaml file.
 
 There is a Dockerfile included to create a new container image containing the Python script to run the different IO workloads. There are 3 types of test available, We set the type of tests we want to run via environment files.
 

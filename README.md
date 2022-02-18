@@ -78,22 +78,19 @@ When performing High Availability and resilience tests Ceph/ODF we need to gener
     - If the GET operation elapsed time is greater than `LOG_SECONDS` second/s, we log the operation.
 
 
-## Deploying the ODF loadgenerator tool.
+## Deploying the ODF load generator tool.
 
-### Deploying with Openshift
-
-### Deploying using Helm.
+### Deploying on Openshift/k8's using Helm.
 To deploy with helm we first need to git clone this repo. 
 ```
 git clone https:https://gitlab.consulting.redhat.com/iberia-consulting/inditex/ocs/ocs-ha-tests
 ```
-We also need to have the helm binary available:
+We also need to have the helm binary available.
 ```
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 
-We need to be logged in to our OCP and in the namespace where we want to deploy our loadgenerator pods
-
+We need to be logged in to our OCP and in the namespace where we want to deploy our loadgenerator pods.
 ```
 oc login https://api.ocp4.example.com:6443  -u user --insecure-skip-tls-verify 
 oc new-project loadgen
@@ -104,27 +101,27 @@ Modify the helm/values.yaml file to fit our needs, depending on the tests we nee
 vi ocs-ha-tests/helm/values.yaml
 ```
 
-Finally, deploy the ODF loadgenerator tool installing the chat with helm:
+Finally, deploy the ODF loadgenerator tool installing the chat with helm.
 
 ```
 cd ocs-ha-tests/
 helm install odf-loadgenerator helm
 ```
 
-or using the template|apply approach.
+Or we can use the helm template|oc create approach.
 ```
 cd ocs-ha-tests/
 helm template helm | oc create -f -
 ```
-### Deploy using an Argocd application.
+### Deploy on Openshift/k8's an Argocd application.
 If you have Argocd running on you OCP cluster, you can use the example argocd application available in the repo under the argocd/ dir.
-Modify the argocd/values.yaml file as needed and deploy the argocd application
+Modify the argocd/values.yaml file as needed and deploy the argocd application.
 ```
 vi argocd/values.yaml
 helm template argocd | oc create -f -
 ```
 
-### Deploy using a Deployment yaml file.
+### Deploy on Openshift/k8's using a Deployment yaml file.
 
 There is a Dockerfile included to create a new container image containing the Python script to run the different IO workloads. There are 3 types of tests available, We set the type of tests we want to run via environment files.
 

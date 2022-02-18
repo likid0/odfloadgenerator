@@ -12,7 +12,7 @@ apps:
     sc: ocs-storagecluster-ceph-rbd
     #Mount point inside the pods
     mountpoint: /mnt/pv 
-    #appsnames can be ignored.
+    #appsnames you can comment-out to exlude running a certain test
     appsname:
       writecache: rbd-write-workload-generator-cache
       write: rbd-write-workload-generator-no-cache

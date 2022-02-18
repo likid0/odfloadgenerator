@@ -157,3 +157,12 @@ There are other env vars available that we can set:
   - `S3_AVG_ATTEMPTS`: This var sets the number of operations to calculate the request average time.
 
 ### Deploying with Podman.
+
+If you want to run the load generator tool outside of a container orchestrator, there are some shell script examples to get you started on the podman/ folder:
+
+```
+ls -1 podman/                                                                                                                                                                                                                                                                    main 
+kfs-write.sh
+krbd-write.sh
+nbd-write.sh
+```

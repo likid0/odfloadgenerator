@@ -110,7 +110,7 @@ helm install odf-loadgenerator helm
 
 Or we can use the helm template|oc create approach.
 ```
-cd ocs-ha-tests/
+cd loadgen/
 helm template helm | oc create -f -
 ```
 ### Deploy on Openshift/k8's an Argocd application.

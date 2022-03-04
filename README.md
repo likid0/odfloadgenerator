@@ -98,7 +98,7 @@ oc new-project loadgen
 
 Modify the helm/values.yaml file to fit our needs, depending on the tests we need to run.
 ```
-vi ocs-ha-tests/helm/values.yaml
+vi odfloadgenerator/helm/values.yaml
 ```
 
 Finally, deploy the ODF loadgenerator tool installing the chat with helm.

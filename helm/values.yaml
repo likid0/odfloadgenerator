@@ -5,19 +5,19 @@ apps:
   ###
   rbd:
     #If set to true RBD testing will take place
-    enabled: True
+    enabled: False
     #Size of the RBD PVs that will be created
     size: 10Gi
     #The Storage Class that will be used to provide the block RWO PVs
-    sc: ocs-storagecluster-ceph-rbd
+    sc: ocs-external-storagecluster-ceph-rbd 
     #Mount point inside the pods
     mountpoint: /mnt/pv 
     #appsnames you can comment-out to exlude running a certain test
     appsname:
-      writecache: rbd-write-workload-generator-cache
+      #     writecache: rbd-write-workload-generator-cache
       write: rbd-write-workload-generator-no-cache
       read: rbd-read-workload-generator-no-cache
-      readcache: rbd-read-workload-generator-cache
+      # readcache: rbd-read-workload-generator-cache
   ###
   # options related to cephfs load generation testing
   ###
@@ -27,16 +27,16 @@ apps:
     sc: ocs-storagecluster-cephfs
     mountpoint: /mnt/pv
     appsname:
-      writecache: cephfs-write-workload-generator-cache
+      #      writecache: cephfs-write-workload-generator-cache
       write: cephfs-write-workload-generator-no-cache
-      read: cephfs-read-workload-generator-no-cache
-      readcache: cephfs-read-workload-generator-cache
+      #read: cephfs-read-workload-generator-no-cache
+      #readcache: cephfs-read-workload-generator-cache
   ###      
   # Options related to S3 load generation testing
   ###
   s3:
-    enabled: False
-    sc: ocs-storagecluster-ceph-rgw
+    enabled: True
+    sc: noobaa-sc-mirror
     s3secure: False
     appsname:
       write: rgw-workload-generator-write

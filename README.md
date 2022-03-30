@@ -104,13 +104,13 @@ vi odfloadgenerator/helm/values.yaml
 Finally, deploy the ODF loadgenerator tool installing the chat with helm.
 
 ```
-cd ocs-ha-tests/
+cd odfloadgenerator/
 helm install odf-loadgenerator helm
 ```
 
 Or we can use the helm template|oc create approach.
 ```
-cd loadgen/
+cd odfloadgenerator/
 helm template helm | oc create -f -
 ```
 ### Deploy on Openshift/k8's an Argocd application.
